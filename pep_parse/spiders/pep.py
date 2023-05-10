@@ -11,7 +11,6 @@ class PepSpider(scrapy.Spider):
         peps_tables = response.css('section[id=numerical-index]')
         for line in peps_tables.css('tr'):
             href = line.css('a::attr(href)')
-            print(href)
             if href == []:
                 continue
             yield response.follow(href[0], callback=self.parse_pep)

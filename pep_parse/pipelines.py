@@ -1,24 +1,18 @@
-import time
-# from pep_parse.settings import BASE_DIR
-
-BASE_DIR = 'results/'
+from pep_parse.settings import BASE_DIR, COLUMNS, DATE
 
 
 class PepParsePipeline:
     def open_spider(self, spider):
         self.status_pep = dict()
         self.filename = (
-            f'''{BASE_DIR}/status_summary_{
-            time.strftime("%Y-%m-%d %H-%M")
-            }.csv'''
+            str(BASE_DIR) + '/status_summary_' + str(DATE) + '.csv'
         )
         self.file = open(self.filename, 'w')
 
     def close_spider(self, spider):
-
         total = 0
         with open(self.filename, mode='w', encoding='utf-8') as f:
-            f.write('Статус,Количество\n')
+            f.write(COLUMNS)
             for status in self.status_pep:
                 total += int(self.status_pep[status])
                 f.write(f'{status},{self.status_pep[status]}\n')
