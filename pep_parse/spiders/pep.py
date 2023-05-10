@@ -1,3 +1,4 @@
+import re
 import scrapy
 from pep_parse.items import PepParseItem
 
@@ -16,10 +17,12 @@ class PepSpider(scrapy.Spider):
             yield response.follow(href[0], callback=self.parse_pep)
 
     def parse_pep(self, response):
-        title = response.css('h1.page-title::text').get().split(' – ')
+        title = response.css('h1.page-title::text').get()
+        x = re.search(r'(?P<version>PEP.\d{1,})...(?P<name>.*)', title)
+        version, name = x.groups()
         data = {
-            'number': title[0],
-            'name': title[1],
+            'number': version,
+            'name': name,
             'status': response.css(
                 'dt:contains("Status") + dd abbr::text'
             ).get(),
